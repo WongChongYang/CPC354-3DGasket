@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #menu{
+            border: 1px solid;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 50px;
+            text-align: center;
+        }
+        div{
+            padding: 5px;
+            min-width: 210px;
+        }
+        label{
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        button{
+            height: 30px;
+            width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+    <title>3D Sierpinski Gasket</title>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        #version 300 es
+        in vec4 aPosition;
+        in vec3 aColor;
+        out vec4 vColor;
+        uniform float uTheta;
+
+        void
+        main()
+        {
+            float s = sin(uTheta);
+            float c = cos(uTheta);
+
+            gl_Position.x = c*aPosition.x + s*aPosition.y;
+            gl_Position.y = c*aPosition.y - s*aPosition.x;
+            gl_Position.z = 0.0;
+            gl_Position.w = 1.0 + abs(c*0.5);
+
+            vColor = vec4(aColor, 1.0);
+        }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        #version 300 es
+        precision mediump float;
+
+        in vec4 vColor;
+        out vec4 fColor;
+
+        void
+        main()
+        {
+            fColor = vColor;
+        }
+    </script>
+
+    <script type="text/javascript" src="initShaders.js"></script>
+    <script type="text/javascript" src="MVnew.js"></script>
+    <script type="text/javascript" src="gasket.js"></script>
+</head>
+
+<body>
+    <canvas id="gl-canvas" width="600" height="600">
+        Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+    <div id="menu">
+        <div>
+            <div>
+                <label for="color">Colors</label>
+            </div>
+            <div>
+                <input type="color" id="color1" value="#ff0000">
+                <input type="color" id="color2" value="#00ff00">
+                <input type="color" id="color3" value="#0000ff">
+            </div>
+        </div>
+        <div>
+            <label for="subdivision">Subdivision</label>
+        </div>
+        <div>
+            0 <input id="subdivision" type="range" min="0" max="5" step="1" value="3" /> 5
+        </div>
+        <div>
+            <label for="speed">Speed</label>
+        </div>
+        <div>
+            Slow <input id="speed" type="range" min="1" max="5" step="1" value="3" /> Fast
+        </div>
+        <div>
+            <label for="direction">Direction</label>
+        </div>
+        <div>
+            <button id="direction">Change</button></div>
+        <div>
+            <label for="play">Action</label>
+        </div>
+        <div>
+            <button id="play">Play</button>
+        </div>
+    </div>
+</body>
+</html>
